@@ -1,110 +1,74 @@
 @import "tailwindcss";
 
-/* THEME VARIABLES - Optimized for Eye Comfort */
+/* THEME SETTINGS - High Contrast Safety */
 :root {
-  --bg-color: #f8fafc;        /* Slate 50 */
-  --card-bg: #ffffff;
-  --card-border: #e2e8f0;     /* Slate 200 */
-  --text-primary: #0f172a;    /* Slate 900 */
-  --text-secondary: #64748b;  /* Slate 500 */
+  --bg-color: #f8fafc;        /* Light Gray/Blue background */
+  --card-bg: #ffffff;         /* Pure white cards */
+  --card-border: #e2e8f0;
+  --text-primary: #0f172a;    /* VERY DARK Slate (Visible in Light Mode) */
+  --text-secondary: #475569;
   --accent-blue: #2563eb;
 }
 
 html.dark {
-  --bg-color: #0b1120;        /* Deep Midnight */
-  --card-bg: #1e293b;         /* Slate 800 */
-  --card-border: #334155;     /* Slate 700 */
-  --text-primary: #f1f5f9;    /* Slate 100 */
-  --text-secondary: #94a3b8;  /* Slate 400 */
+  --bg-color: #0b1120;        /* Midnight background */
+  --card-bg: #1e293b;         /* Slate 800 cards */
+  --card-border: #334155;
+  --text-primary: #f8fafc;    /* PURE WHITE text (Visible in Dark Mode) */
+  --text-secondary: #94a3b8;
   --accent-blue: #60a5fa;
 }
 
+/* Apply variables to the whole app */
 body {
   background-color: var(--bg-color);
+  color: var(--text-primary); /* This ensures all text defaults to the visible variable */
+  transition: background-color 0.3s ease, color 0.3s ease;
+  font-family: 'Inter', sans-serif;
+  margin: 0;
+}
+
+/* Force visibility on standard elements */
+h1, h2, h3, h4, p, span, label {
   color: var(--text-primary);
-  transition: background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  font-family: 'Inter', system-ui, sans-serif;
-  -webkit-font-smoothing: antialiased;
 }
 
-/* IMPROVED 3D FLIP CARD */
-.flip-card { 
-  perspective: 1200px; 
-  height: 280px; 
+/* Ensure secondary text is also visible */
+.text-secondary {
+  color: var(--text-secondary);
 }
 
-.flip-card-inner {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  transition: transform 0.7s cubic-bezier(0.34, 1.56, 0.64, 1); /* Bouncy effect */
-  transform-style: preserve-3d;
-  cursor: pointer;
-}
-
-.flip-card:hover .flip-card-inner { 
-  transform: rotateY(180deg); 
-}
-
-.flip-card-front, .flip-card-back {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  backface-visibility: hidden;
-  border-radius: 1.5rem;
-  border: 1px solid var(--card-border);
-  display: flex;
-  flex-direction: column;
-  padding: 1.5rem;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-}
-
-.flip-card-front {
+/* Fix for standard inputs (often have invisible text) */
+input, select, textarea {
+  color: var(--text-primary) !important;
   background-color: var(--card-bg);
 }
 
-.flip-card-back {
-  background-color: var(--accent-blue);
-  color: white;
-  transform: rotateY(180deg);
-  justify-content: center;
+input::placeholder {
+  color: var(--text-secondary);
+  opacity: 0.7;
 }
 
-/* SMART GLASSMORPHISM (Dark Mode Specific) */
-html.dark .bg-white\/80 {
-  background-color: rgba(30, 41, 59, 0.7);
-  backdrop-filter: blur(12px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+/* --- 3D FLIP CARD --- */
+.flip-card { perspective: 1000px; height: 260px; }
+.flip-card-inner {
+  position: relative; width: 100%; height: 100%;
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-style: preserve-3d;
+}
+.flip-card:hover .flip-card-inner { transform: rotateY(180deg); }
+.flip-card-front, .flip-card-back {
+  position: absolute; width: 100%; height: 100%;
+  backface-visibility: hidden; border-radius: 1.5rem;
+  border: 1px solid var(--card-border);
+}
+.flip-card-front { background: var(--card-bg); }
+.flip-card-back { 
+  transform: rotateY(180deg); 
+  background: var(--accent-blue);
+  color: white !important; /* Back of card is always blue, so text must be white */
 }
 
-/* KEYFRAMES & ANIMATIONS */
-@keyframes slideInUp {
-  from { transform: translateY(20px); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
-}
-
-@keyframes smoothFade {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-@keyframes softPulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.02); }
-}
-
-@keyframes subtleGlow {
-  0%, 100% { box-shadow: 0 0 10px rgba(96, 165, 250, 0.2); }
-  50% { box-shadow: 0 0 25px rgba(96, 165, 250, 0.4); }
-}
-
-/* ANIMATION CLASSES */
-.animate-slide-up { animation: slideInUp 0.6s ease-out both; }
-.animate-fade-in { animation: smoothFade 0.5s ease-in both; }
-.pulse-glow { animation: subtleGlow 3s infinite ease-in-out; }
-
-/* Custom Scrollbar for Dark Mode */
-html.dark ::-webkit-scrollbar { width: 8px; }
-html.dark ::-webkit-scrollbar-track { background: var(--bg-color); }
-html.dark ::-webkit-scrollbar-thumb { background: var(--card-border); border-radius: 10px; }
-html.dark ::-webkit-scrollbar-thumb:hover { background: var(--text-secondary); }
+/* --- ANIMATIONS --- */
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+.animate-fade-in { animation: fadeIn 0.6s ease-in-out forwards; }
