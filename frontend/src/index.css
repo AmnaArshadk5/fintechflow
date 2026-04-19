@@ -34,7 +34,7 @@ body {
 
 /* Universal text visibility safety */
 p, span, label, h1, h2, h3, h4, th, td {
-  color: var(--text-primary) !important;
+  color: white !important;
 }
 
 .text-secondary {
